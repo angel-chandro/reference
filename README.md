@@ -1,6 +1,6 @@
 DHALOS
 
-I have to upload the code to github. It is essential to run Galform and Shark SAMs over merger trees since it gives the appropriate format. It can be run in parallel. The code is in: INTRODUCE PATH
+I have to upload the code to github. It is essential to run Galform and Shark SAMs over merger trees since it gives the appropriate format. It can be run in parallel. The code is in: /home/chandro/dhalo-trees_rhalf+snap_nfids
 
 There are different parts of the code to be run:
 - Find_Descendants: create own Dhalos merger trees given halos-subhalos and particle files.
@@ -11,10 +11,10 @@ To run the Build_Trees executable:  mpirun -np 8(number of Gadget4 output files)
 To run the Trace_Particles executable:  mpirun -np 8(number of Gadget4 output files) ./path/to/build/trace_particles parameter_file
 
 All these executables can be run through the Slurm queueing system. One example is given here:
-- submit_mpi_UNITsim+CT.sh: code to finally run the whole UNIT simulation parallelized with 3 nodes communication. In this case you only run Build_Trees and through different nodes. mpirun -npernode 42 ./path/to/build/build_trees parameter_file
+- submit_mpi_UNITsim+CT.sh: code to finally run the whole UNIT simulation parallelized with 3 nodes communication (sbatch submit_mpi_UNITsim+CT.sh). In this case you only run Build_Trees and through different nodes. mpirun -npernode 42 ./path/to/build/build_trees parameter_file
 
 Parameter files:
-- UNITsim+CT.txt: parameter file for the whole UNIT simulation with ConsistentTrees merger trees. In this case you only run Build_Trees. Data generated in /data8/vgonzalez/SAMs/trees/
+- UNITsim+CT.txt and UNITsim+CT.cfg: parameter files for the whole UNIT simulation with ConsistentTrees merger trees. In this case you only run Build_Trees. Data generated in /data8/vgonzalez/SAMs/trees/
 - G4_HDF5_HBT_multiple+D.txt: parameter file to run over Gadget4 data generating own Dhalo merger trees. In this case you run first Find_Descendants, then Build_Trees and optionally Trace_Particles.
 - G4_HDF5_HBT_multiple+S.txt: parameter file to run over Gadget4 data generating own Dhalo merger trees. In this case you only run Build_Trees and optionally Trace_Particles.
 
@@ -33,33 +33,42 @@ GALFORM
 Semi-analytical model. The code is in /home/chandro/galform
 
 To run the code we need a reference parameter file (.ref file) where the different parameter values are defined.
-- UNIT.ref: example.
+- UNIT.ref: example of the UNIT simulation based on the gp19 model. Variations: the path aquarius_tree_file,
+trace_particles = true or false and the path aquarius_particle_file, cosmology and power spectrum parameters, simulation volumes.
+Another important thing is to have the power spectrum of the cosmology employed. To generate I have used CAMB:
+- camb_Pk.py: given the cosmology and power spectrum parameters it generates the Pk for the .ref file (PKfile parameter).
 
-Later, these params can be modified using the codes to run Galform and to send it to slurm queues. Run only 1 simple model or more (not emulator): you need to provide a model (I have usually used gp19.vimal as reference and then I may have changed some values) and a simulation that has to be predefined.
-- run_galform_vio_simplified.csh: you have the different models and simulations defined, as well as the output properties you can choose.
-- qsub_galform_vio_simplified.csh: you choose the model and simulation and it is sent to a Slurm queue. (each subvolume is a job)
-- test_par.sh: 1 model parallelized (1 job, 64 subvolumes per job, 1 subvolume per cpu)
+Later, all these paramerters can be still modified using the codes to run and send Galform to slurm queues (the Slurm configuration can be modified as you wish).
+Run only 1 simple model or more (not emulator): to run Galform you need to provide a model, an Nbody simulation, a redshift and a subvolume.
+- run_galform.csh: here although the .ref file is used as a reference, you can define some parameter values again overwriting them. In such a way, there is a wide variety of different models and simulations defined, as well as the output properties you can choose. Flags: set only "galform" (to run galform) and "elliott" (to produce the desired output) to true, while "models_dir" to indicate the output path and "./delete_variable.csh $galform_inputs_file aquarius_particle_file" in case there are no particle files. It generates the same number of subvolumes as the input Dhalos merger trees are distributed in. (I have usually used gp19.vimal as reference and then I may have changed some values)
+To delete a parameter: ./delete_variable.csh $galform_inputs_file parameter_name
+To change a parameter value: ./replace_variable.csh $galform_inputs_file parameter_name new_parameter_value
+- qsub_galform.csh: you choose a model and a simulation and it is sent to a Slurm queue (1 slurm job, 1 subvolume per job, 16 cpus per subvolume). (./qsub_galform.csh)
+- qsub_galform_par.sh: send 1 or more models parallelized (1 slurm job, 64 subvolumes per job, 1 cpu per subvolume). More efficient. (./qsub_galform_par.sh)
 
 Run 1 or more models (specific for the training models of the emulator):
-- run_galform_vio_simplified_em_tfm_eff.csh: it saves each model run in a directory whose name indicates the values of the parameters varied.
-- test_par_mult_em.sh: it reads the parameters of the latin hypercube file for 1 model at a time (4 jobs, 16 subvolumes per job, 1 subvolume per cpu)
-- test_par_mult_em_eff.sh: it reads the parameters of the latin hypercube file for 2 models at the same time (1 job, 128 subvolumes per job, 1 subvolume per cpu) ./qsub_galform_vio_simplified.csh
+- run_galform_em.csh: there is a wide variety of different models and simulations defined, as well as the output properties you can choose. Flags: set only "galform" (to run galform) and "elliott" (to produce the desired output) to true, while "models_dir" to indicate the output path and "./delete_variable.csh $galform_inputs_file aquarius_particle_file" in case there are no particle files. It generates the same number of subvolumes as the input Dhalos merger trees are distributed in. The difference respect to "run_galform.csh" is that Galform uses the model "gp19.vimal.em.project" in which each Galform run has a different set of free parameters (those we are going to study their variation), so the input free parameters take the value of the corresponding Latin Hypercube position and each model itself is stored in a different directory whose name indicate the parameter values.
+- qsub_galform_par_em.sh: it reads the parameters of the latin hypercube from a file (each line corresponds to the ten parameter values) for 1 model at a time (4 jobs, 16 subvolumes per job, 1 cpu per subvolume). (./qsub_galform_par_em.sh)
+- qsub_galform_par_em_eff.sh: it reads the parameters of the latin hypercube from a file (each line corresponds to the ten parameter values) for 2 models at the same time (1 job, 128 subvolumes per job, 1 cpu per subvolume). (./qsub_galform_par_em_eff.sh)
 
 
 -----------------------------------------------------------------------------------------------------------------
 
-GALFORM
+SHARK
 
 Semi-analytical model. The code is in /home/chandro/shark
 
-SHARK
-
-You can find more info in the website https://shark-sam.readthedocs.io/en/latest/
-
 To run it we need to provide the free parameter values, the path to the Dhalos output and a file indicating the redshift-snapshot correspondence.
 
-Not parallelized: 1 subvolume: ./shark parameter_file "simulation_batches = nº of subvolume" All subvolumes: ./shark parameter_file -t nº of threads "simulation_batches = 0-maximum_subvolume" (this way doesn't produce the output distributed in subvolumes)
+Not parallelized: this way doesn't produce the output distributed in subvolumes, but all the subvolumes together
+- 1 subvolume: ./shark parameter_file "simulation_batches = nº of subvolume"
+- All subvolumes: ./shark parameter_file -t "nº of threads" "simulation_batches = 0-maximum_subvolume"
 
-Parallelized: I suppose you can apply the same strategy as the one in Galform (sending different subolumes to different Slurm queues) ./shark-submit parameter_file "simulation_batches=0-maximum_subvolume" doesn't work. sbatch: error: Unable to open file hpc/shark-run I have implemented a new "shark-run" file that send 1 subvolume per job. What it remains is to implement the same parallelization carried out in Galform (send more than 1 model for emulator training and make the code the more efficient).
+Parallelized: I suppose you can apply the same strategy as the one in Galform (sending different subvolumes to different Slurm queues)
+./shark-submit parameter_file "simulation_batches=0-maximum_subvolume" doesn't work, appearing the following error "sbatch: error: Unable to open file hpc/shark-run".
+Therefore, I have implemented a new "shark-run" file that send 1 subvolume per job, this way the output is distributed over the different subvolumes and it is easier to parallelise.
+- shark-run: new shark-run to launch 1 subvolume per job.
+What it remains is to implement the same parallelization carried out in Galform (send more than 1 model for emulator training and make the code as efficient as possible).
 
+You can find more info in the website https://shark-sam.readthedocs.io/en/latest/
 For example I haven't worked varying the different parameters, but it is described how to do it in https://shark-sam.readthedocs.io/en/latest/optim.html

@@ -1,0 +1,382 @@
+# GALFORM input parameters file for 
+# Gonzalez-Perez et al. (in prep) model
+# which includes similar BH parameters to Griffin+18
+# Vimal's merging scheme and a very slow ram pressure stripping.
+# This model assumes a single IMF and Conroy+09 SPS by default. 
+# 
+# parameters in this file can appear in any order, and you can have as many comments 
+# as you like
+################################################################################
+# cosmology
+omega0 = 0.3089
+lambda0 = 0.6911
+omegab = 0.0486
+h0 = 0.6774
+CMBT0 = 2.7255 # Planck 2015
+#
+######################################################################################
+#
+# N-body or Monte Carlo halo merger trees? 
+# EPS -> for monte carlo trees (Press-Schecter trees)
+# MILLENNIUM -> old style N-body trees 
+# AQUARIUS -> new N-body trees
+# HDF5 -> AJB's HDF5 N-body tree files
+tree_type              = AQUARIUS
+
+# N-body filenames
+# file with N-body merger trees (incl halo & sub-halo positions)
+aquarius_tree_file = /data8/vgonzalez/SAMs/trees/tree_128
+# where the DHalos merger trees are located
+
+# file of posns of particles on which could put satellite galaxy (if trace_particles = .true.)
+trace_particles = .false. # added because I don't have particle files
+aquarius_particle_file = /data8/vgonzalez/SAMs/trees/tree_128 # not used, here we don't have particle files
+# where the DHalos particle catalogues are located
+
+aquarius_nbody_spins   = .false.
+
+# Use subhalo information to merge galaxies?
+aquarius_nbody_merging = .true.
+
+# Merging scheme: 0=merge when subhalo lost
+#                 1=calculate DF timescale from last known orbit
+aquarius_nbody_merging_scheme        = 1
+
+# For DF timescale calculation assume isothermal halo profile with
+# same mass as the NFW profile within the radius of the subhalo (true) 
+# or the virial radius (false).
+aquarius_nbody_merging_interior_mass = .true.
+
+
+# if append_ivolume = .true., give filenames without .${ivol} extension
+# if N-body trees with append_ivolume = .true., then code extracts volume from volume_file
+append_ivolume = .false.
+
+######################################################################################
+#
+# power spectrum 
+# - for MC trees, used to calc halo MF, merger trees & concentration parameter
+# - for N-body trees, only used to calc halo concentration parameter
+# shape of power spectrum/transfer function
+itrans = -1		# (0 -> power-law, 1 -> BBKS, -1 -> read P(k) from file)
+# power spectrum amplitude	
+sigma8 = 0.8147         	# set 0 for COBE normalizn
+# file with P(k)
+PKfile = ../../CAMB/pk_UNIT_norm.dat
+# the following only used if itrans => 0
+# slope of primordial power spectrum, P(k) propto k^nspec
+nspec = 0.9667
+# for running spectral index neff=nspec+0.5*dndlnk*log(k/kref)
+dndlnk = 0
+kref = 1
+# characteristic scale in BBKS transfer function
+gamma = 0.14
+#
+# Filter Factor beta
+# 0.0 : real space TH (CDM) ; 1.0 : sharp cut k-space (WDM)
+# else: convolution of other two - use??
+FiltFac_beta = 0.0
+#
+#######################################################################################
+#
+# output times
+nout = 1
+zout = [ 0]
+# output galaxies for all snapshot times in N-body tree?
+outall = .false.
+#
+# timesteps
+# time levels in MC tree (for N-body trees, these all ignored)
+nstep = 100
+ahalo = 1
+astart = 0.02
+# choice of time grid (0 -> uniform in ln(a), 1-> uniform in t, 
+# 2 or 3 -> fine steps for SFR histories for GRASIL)
+istep = 0
+# substeps in merger tree (usually set N_SubStep=1 for MC trees)
+N_SubStep = 8
+#
+# JCH's alternative way to get substeps by inserting extra nodes in N-body tree
+# (not well tested - recommend not to use - set to 0 to turn this off)
+nstepadd = 0
+#
+######################################################################################
+#
+# halo mass grid & mass fun (MC trees)
+mlow = 1e10
+mfac = 1.414
+nmass = 35
+nhalomin = 10
+nhalomax = 200
+# select halo masses from grid or randomly?
+Halo_Sample_Method = 1	# 1 -> halo masses quantized on grid (as in old GALFORM)
+# halo MF 
+massfun = 2		# (0 -> PS mass fn, 1 -> Sheth-Mo-Tormen, 2 -> Jenkins etal, 3 -> Reed etal)
+#
+# volume in (Mpc/h)^3 
+# - for MC trees, used to decide how many halos to calc
+# - for N-body trees, only used to assign weights 
+# if N-body trees with append_ivolume = .true., then code extracts
+# volume from volume_file
+# The UNIT trees have been split into files by drawing a random
+# number in the range 0-63 to decide which file to put each tree
+# in. This means that the volume associated with each file is 1/64
+# times the simulation volume (subvolume), (1000. / Mpc/h)^3.
+volume = 15625000.0 
+#
+# halo trees
+ISEED = -358791
+# generation of MC trees
+# which version of EPS Monte carlo trees?
+modified_trees = .true.	# F -> Cole etal 2000, T -> Cole etal 2007
+mres = 5e9
+eps1 = 0.1
+eps2 = 0.1
+# quantized formation epochs
+f_form = 2
+# use halo props at formation time? (as in old GALFORM)
+use_formn_halo_props = .false.
+propagate_vhalo = .true.
+#
+######################################################################################
+#
+# output options for galaxies & halos
+# write galaxies.hdf5 file?
+Output_Galaxies_file = .true.
+# only output galaxies with mgal > mgalmin & tburst < tburstmax
+mgalmin = 1.e+04
+tburstmax = 1.0e20
+# output all descendents of galaxies with mgal > mgalmin ? (causes tburstmax to be ignored)
+mgalmin_output_descendants = .false.
+#
+# galaxy merger tree output
+# build galaxy merger trees and assign a depth first ID, LastProgenitorID, 
+# EndMainBranchID etc to each galaxy (as in Millennium database)
+build_galaxy_trees = .false.
+#
+# output additional information about bursts to galaxies file?
+Track_Bursts = .true.
+# write file with data relating to gas cooling & AGN feedback? (see cooling.shells.F90)
+Output_Cooling = .false.	# final timestep only, for multiple trees
+Output_Cooling_AllLevels = .false.	# all timesteps, main progenitor only
+#
+######################################################################################
+#
+# halo properties
+# halo density profile
+DM_profile = 2		# 1->SIS, 2->NFW
+# NFW scale radius rs/rvir 
+aprofile = 0		# 0 -> use analytical formula
+# which analytical formula for c=rvir/rs ?
+NFW_c_Prescription = 0	# 0->NFW, 1->Bullock
+#
+# halo spin distribn
+spin_distrib = 1	# 1-> lognormal, 2-> Bett
+# parameters for lognormal spin distribn
+spinmed = 0.039		# median halo spin
+spindist = 0.53		# dispersion in ln(halo spin)
+#
+# galaxy sizes & halo contraction
+selfgravity = .true.	# true -> include gravity of disk+bulge
+dynamic_halo = .true.	# true -> include halo contraction
+#
+######################################################################################
+#
+# cooling of gas in halos
+# cooling model (including treatment of reheated gas)
+icool = 3		# (0-> Cole 2000, 3-> Bower 2006, 4-> Benson 2010)
+hot_gas_profile = 4	# 4 -> fixed radius const density core in gas + NFW halo - see hot_gas_profiles.F90
+core = 0.1		# sets gas core radius  as frac of r_vir for hot_gas_profile=4
+Apply_rFreefall_Limit = .true.	# .true. -> infall limited by free-fall timescale
+starvation = .false.	# .true. -> no gas cooling onto satellite galaxies
+
+RamPressure_Strip = .true.  # Gradual ram pressure striping
+RamPressure_Transfer_Fraction = 0.01
+#
+# re-incorporation of gas ejected by feedback back into hot gas reservoir (for icool=3)
+# Corresponds to old definition alpha_reheat = 0.92 which used dynamical time differing by factor of 1/h0 (for halo dynamical time defined as rvir/Vc)
+alpha_reheat = 1.26027
+# cooling suppression factor used with icool=3 to get smoother dependence on mass
+AGN_Feedback_Smooth = 0
+#
+# non-standard options
+Infall_Everything = .false.	# .true. -> all gas cools as soon as halo exists
+# mimic photo-ionizn feedback by turning off cooling for Vc(halo) < vcut & z < zcut 
+vcut = 30
+zcut = 10
+# mimic conduction by turning off cooling for Vc(halo) > vconduction*(1+z)^qconduction
+vconduction = 1e+30
+#
+# assign hot gas an initial metallicity PreEnrich_Z if its mass exceeds total mass of
+# all its progenitors by >PreEnrich_DeltaMMin 
+# (seems to be needed when use Millennium merger trees)
+#PreEnrich_DeltaMMin = 5e10
+#PreEnrich_Z = 0.001
+#
+######################################################################################
+#
+# star formation in disks
+# vdisk = .true. -> use Vc(disk) in SF & feedback laws, .false. -> use Vc(halo)
+# tdisk = .true. -> tau_star = epsilon_Star^-1 *tdyn_disk *(vcirc/200.)^alphastar *(1+z)^pstar
+# tdisk = .false. -> tau_star = tau0star * (vcirc/200)^alphastar
+vdisk = .true.
+tdisk = .true.
+epsilon_Star = 0.002857
+alphastar = -1.5
+pstar = 0
+#
+tau_star_min_quies = 0.001	# min disk SFR timescale (in Gyr)
+# disk stability threshold for star formation
+dstab_sf_law = .false.
+# minimum central surface density of gas in disk for SF to occur
+sf_crit_dens = 0
+# key to active the a threshold in the quiescent star formation activity (Kennicutt 1989 law)
+alpha_crit               = 0.402
+max_cold_gas_cut         = 0.0
+solve_SFeqs_numerically  = .true.
+lum_linear_interpolation = .true.
+Global_Schmidt_Law       = .false.
+Molecular_BR_Law         = .true.
+DuttonDenseMolecFunc     = .false.
+Molecular_KMT09_Law      = .false.
+Schmidt_Exp              = 1.4
+cfacKM09                 = 5.0
+#nu_sf is the inverse of the depletion timescale of molecular gas (H2+He) in units of Gyr-1
+#within observational errors (Bigiel et al. 2010), and for a Milky-way Xco, nu_sf=[0.2-1.7] Gyr-1, with a median
+#value of nu_sf=0.5. Here we use the median value of observations as the default value.
+nu_sf                    = 0.5
+#Po corresponds to the normalisation in the Pressure-H2/HI relation from Leroy et al. (2008) for their combined sample.
+#beta_press: power-law index in the Pressure-H2/HI relation from Leroy et al. (2008) for their combined sample.               
+Po                       = 17000.
+beta_press               = 0.8
+Accuracy_SFeqs           = 0.05
+#Schmidt coefficient for low-pressure regimes
+#
+# some kind of fix to prevent Vc of disks getting too large
+# limit Vc(disk) < Vcirc_Fac*Vc(halo) when computing disk SF & feedback
+# but do not make disk size consistent with this
+#Vcirc_Fac = 2
+#
+######################################################################################
+#
+# SN feedback
+# normal SN feedback (ejection into halo)
+alphahot = 3.2
+vhotdisk = 370
+vhotburst = 370
+# superwinds (ejection out of halo)
+fsw0disk = 0
+fsw0burst = 0
+vswdisk = 100
+vswburst = 100
+#
+#
+# AGN feedback
+epsilon_SMBH_Eddington = 0.01	# 0-> no AGN feedback
+SMBH_Heating_Efficiency = 0.02
+# set dividing line between cold & hot accretion - used with AGN feedback
+alpha_cool = 0.8
+#
+# BH accretion
+iSMBHacc = 4		# option for how SMBH grows during merger/burst
+F_SMBH = 0.005		# 0 -> no accretion onto SMBH
+SMBH_ftq = 10 		# Proportionality constant for relating tbulge with the accretion time of the BH
+SMBH_Mseed = 10.0 # SMBH seed mass, assumed to be zero in revisions prior to 581
+#
+# SMBH spin evolution
+SMBH_accretion_spinup = 2		# 0 -> Do not update the BH spin due to accretion 1-> Prolonged model for the spin update (Fanidakis+11), 2 -> Chaotic mode for the spin calculation
+SMBH_merger_spinup = 1 # 0-> Do not update SMBH spin in mergers, 1-> update 
+#
+SMBH_delta_m = 2 # 1-> mass accreted in chunks of the warp mass, 2-> mass accreted in chunks of the self-gravity mass
+SMBH_default_spin = 0.1 # If no merger and accretion spinup, set spins to default value
+#
+######################################################################################
+#
+# dynamical friction & merging
+# merger timescale (for MC trees, or N-body trees with  aquarius_nbody_merging=.false.)
+# use Lacey & Cole (1993) analytical formula based on Chandrasekhar?
+# (if .false., use power-law fitting formula from Cole etal (1994))
+dyn_fric = .true.
+# orbit factor in Lacey & Cole formula
+Orbital_Parameter_Distribution =  1	# 1-> use Cole etal (2000), 2-> use Benson (2005)
+# rescaling factor for Chandrasekhar dyn fric timescale (if dyn_fric = .true.)
+tau0mrg = 1.5
+# parameter for alternative dyn fric parametrization (if dyn_fric = .false.)
+alphamrg = 0.25
+#
+# morphology & size of merger remnant
+fellip = 0.3		# threshold M2/M1 for converting disks to spheroids
+f_orbit = 1.0		# orbital energy contribn in galaxy merger
+#
+#
+# triggering of bursts in mergers
+fburst = 0.1		# threshold M2/M1 for triggering bursts in minor mergers
+btburst = 2		# suppress minor-merger bursts if B/T>btburst
+fgasburst = 0.1		# suppress minor-merger bursts if fgas<fgasburst in primary disk
+#
+# check gas content of unstable disks before allowing to burst
+gasrich_unstabledisk = .false. 
+#
+# disk instabilities
+stabledisk = 0.8		# 0 -> no disk instabilities
+Disk_Stability_Grow_SMBH = .true.
+Disk_Stab_Transfer_Frac = 1
+# for unstable disk, set spheroid radius to largest radius at which disk would be unstable?
+Disk_Stability_Large_Radii = .true.
+#
+#
+# star formation & feedback in bursts
+instant = .false.	# .true. -> instantaneous bursts
+fdyn = 10		# (burst SFR timescale)/(bulge tdyn)
+tau_star_min_burst = 0.05	# min burst SFR timescale (in Gyr)
+efold = 3		# burst duration (in e-folding times)
+# choose whether residual gas left at end of burst is ejected instantaneously (as in orig
+# GALFORM code) or continuously over duration of burst
+Burst_Decay_to_Zero = .false.	# .false. -> instantaneous gas ejection at end of burst
+#
+######################################################################################
+#
+# IMFs, stellar populations (SSPs) & chemical evoln
+stellar_pop_dir = /data8/vgonzalez/stellar_pop
+nmf = 1		# 1 -> universal IMF, 2-> different IMF in bursts
+nzmet = 22	# no of metallicities for SSP files
+# universal IMF (chabrier I think)
+seds = [cw09v2.4_ssp_cha_Z0002, cw09v2.4_ssp_cha_Z0003, cw09v2.4_ssp_cha_Z0004, cw09v2.4_ssp_cha_Z0005, cw09v2.4_ssp_cha_Z0006, cw09v2.4_ssp_cha_Z0008, cw09v2.4_ssp_cha_Z0010, cw09v2.4_ssp_cha_Z0012, cw09v2.4_ssp_cha_Z0016, cw09v2.4_ssp_cha_Z0020, cw09v2.4_ssp_cha_Z0025, cw09v2.4_ssp_cha_Z0031, cw09v2.4_ssp_cha_Z0039, cw09v2.4_ssp_cha_Z0049, cw09v2.4_ssp_cha_Z0061, cw09v2.4_ssp_cha_Z0077, cw09v2.4_ssp_cha_Z0096, cw09v2.4_ssp_cha_Z0119, cw09v2.4_ssp_cha_Z0149, cw09v2.4_ssp_cha_Z0189, cw09v2.4_ssp_cha_Z0238, cw09v2.4_ssp_cha_Z0298]
+upsilon = 1.0
+yield = 0.02908
+recycle = 0.4588
+#
+# output SSPs as ASCII files?
+Output_ASCII_SSPs = .false.	# DOESN'T WORK!
+#
+# preferential metal ejection by SN
+resc = 0
+alphaesc = 0
+#
+######################################################################################
+#
+# photometric bands & emission lines
+# see /Data/filters/filters_cur.log to see what filters these correspond to
+# bands BJ, K, B, V, I, V, Lyc
+idband = [6, 49, 51, 52, 54, 52, 1002]
+# select whether rest-frame (0), observer-frame (1), lum-weighted age (2), 
+# lum-weighted metallicity (3), lum-weighted Vc (4), mass-weighted age (5)
+iselect = [1, 1, 1, 1, 1, 3, 0]
+# which version of filters file
+filterfile = unique
+#
+# IGM attenuation of galaxy luminosity?
+absorb = .true.
+IGM_Absorption_Method = 2	# 1-> Madau, 2-> Meiksin
+#
+# emission lines
+emlines = .true.
+emlinefile = emlines_stas90_T45_n10_Ns1_Lya.data
+# select which emission lines from file to compute
+nline = 2		# -1 -> compute all emission lines in file
+lines = [Lyalpha, Halpha]
+#
+######################################################################################
+#
+# parameters which have been changed from standard values follow
+

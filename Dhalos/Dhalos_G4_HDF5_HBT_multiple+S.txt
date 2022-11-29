@@ -6,19 +6,18 @@
 
 # Simulation directory
 basedir                = /home/chandro/gadget4/examples/DM-L50-N128/output_hdf5_split_moresnaps_hbt_orphans/
-subhalo_catalogue_path = groups_XXX/fof_subhalo_tab_XXX
-subhalo_ids_path       = snapdir_XXX/snapshot_XXX
-#subhalo_catalogue_path = groups_XXX/subhalo_prog_XXX
-#subhalo_ids_path       = groups_XXX/subhalo_prog_XXX
+# path to where the halo and particle catalogues are located
+subhalo_catalogue_path = groups_XXX/fof_subhalo_tab_XXX # only halo catalogues
+subhalo_ids_path = none # no need for particle catalogues
 id_size          = 8
 float_size       = 4
 subhalo_format   = GADGET4_HDF5
-particle_type    = 1  # not used
+particle_type    = -1  # not used
 
 # Range of snapshots to use
 # Ignored if snapnum_file is not "none"
-ifirst = 0
-ilast  = 8
+ifirst = 0 # initial snapshot
+ilast  = 128 # final snapshot
 
 # File with snapshot renumbering info
 # Set to "none" to disable.
@@ -40,13 +39,14 @@ omegab  =   0.048200
 nproc_io = 128
 
 # Location of snapshots
-# Only needed to find particles for type 2 Galform galaxies
+# Only needed to find particles for type 2 Galform galaxies (Trace_Particles executable)
 snapshot_names  = /home/chandro/gadget4/examples/DM-L50-N128/output_hdf5_split_moresnaps_hbt_orphans/snapdir_XXX/snapshot-prevmostboundonly_XXX
+# path to where the particles are stored (all of them or catalogues with only the ones for type 2 galaxies running the SUBFIND_ORPHAN_TREATMENT flag)
 snapshot_format = HDF5  # not used
 
 # Where to find halo descendants information
-descendants_format = find_descendants
-descendants_path   = ./trees/
+descendants_format = gadget4 # gadget4 merger trees
+descendants_path   = /home/chandro/gadget4/examples/DM-L50-N128/output_hdf5_split_moresnaps_hbt_orphans/groups_XXX
 
 #
 # MERGER TREE FILE PARAMETERS
@@ -59,7 +59,7 @@ treedir = ./trees/
 tree_basename = tree
 
 # Number of merger tree files to produce
-ntreefile = 16
+ntreefile = 64
 
 #
 # MERGER TREE ALGORITHM PARAMETERS
@@ -84,10 +84,6 @@ max_memory = 4000
 
 # Location for temp files
 scratch_dir = ./tmp/
-
-# added parameter
-# number of files the ids are distributed in
-n_files_ids = 8
 
 # Parameters specific to Build_Trees
 # ----------------------------------
@@ -141,7 +137,8 @@ trace_dir = ./trees/particle_lists
 read_all_files = .false.
 
 # Which particle types to read
-types_to_read = [ F, T, F, F, F, F ]
+types_to_read = [ F, T, F, F, F, F ] # only DM particles
 
 # Whether to use orphan particles to set pos/vel of interpolated subhalos
 update_tree_files = T
+# create a backup copy of the merger trees before running Trace_Particles

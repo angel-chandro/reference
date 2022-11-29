@@ -5,49 +5,46 @@
 # ---------------------
 
 # Simulation directory
-basedir                = /home/chandro/gadget4/examples/DM-L50-N128/output_hdf5_split_moresnaps_hbt_orphans/
-subhalo_catalogue_path = groups_XXX/fof_subhalo_tab_XXX
-subhalo_ids_path = none
-#subhalo_ids_path       = groups_XXX/fof_subhalo_tab_XXX
-#subhalo_catalogue_path = groups_XXX/subhalo_prog_XXX
-#subhalo_ids_path       = groups_XXX/subhalo_prog_XXX
+basedir                = /home/chandro/dhalo-trees/Parameters/UNITsim+CT/UNITsim+CT.cfg
+subhalo_catalogue_path = groups_XXX_z???p???/eagle_subfind_tab_XXX_z???p??? # not used
+subhalo_ids_path       = groups_XXX_z???p???/eagle_subfind_tab_XXX_z???p??? # not used
 id_size          = 8
 float_size       = 4
-subhalo_format   = GADGET4_HDF5
+subhalo_format   = consistenttrees
 particle_type    = -1  # not used
 
 # Range of snapshots to use
 # Ignored if snapnum_file is not "none"
-ifirst = 0
-ilast  = 8
+ifirst = 0 # initial snapshot
+ilast  = 128 # final snapshot
 
 # File with snapshot renumbering info
 # Set to "none" to disable.
 snapnum_file = none
 
 # Particle mass [Msun/h]
-mpart = 4.076e+10
+mpart = 1.24718e+09
 
 # Box size [Mpc/h]
-lbox =   50
+lbox =   1000
 
 # Cosmological parameters
-omega0  =   0.308000
-lambda0 =   0.692000
-h0      =   0.678000
-omegab  =   0.048200
+omega0  =   0.308900
+lambda0 =   0.691100
+h0      =   0.677400
+omegab  =   0.048600
 
 # Maximum number of processors to do simultaneous I/O
 nproc_io = 128
 
 # Location of snapshots
-# Only needed to find particles for type 2 Galform galaxies
-snapshot_names  = /home/chandro/gadget4/examples/DM-L50-N128/output_hdf5_split_moresnaps_hbt_orphans/snapdir_XXX/snapshot-prevmostboundonly_XXX
+# Only needed to find particles for type 2 Galform galaxies (Trace_Particles executable)
+snapshot_names  = snapdir_XXX/snap_coco_big_run_1-groupordered_XXX # not used
 snapshot_format = HDF5  # not used
 
 # Where to find halo descendants information
-descendants_format = gadget4
-descendants_path   = /home/chandro/gadget4/examples/DM-L50-N128/output_hdf5_split_moresnaps_hbt_orphans/groups_XXX
+descendants_format = none # not used
+descendants_path   = ./trees/
 
 #
 # MERGER TREE FILE PARAMETERS
@@ -60,7 +57,7 @@ treedir = ./trees/
 tree_basename = tree
 
 # Number of merger tree files to produce
-ntreefile = 16
+ntreefile = 64
 
 #
 # MERGER TREE ALGORITHM PARAMETERS
@@ -86,6 +83,11 @@ max_memory = 4000
 # Location for temp files
 scratch_dir = ./tmp/
 
+# Parameter specific to subhalo_format="LGADGET2","LGADGET3","PGADGET3",
+# "COCO","GADGET4_HDF5","EAGLE"
+# it determines the number of files the ids are distributed in
+n_files_ids = 1
+
 # Parameters specific to Build_Trees
 # ----------------------------------
 
@@ -107,7 +109,7 @@ mfrac = 0.75
 rfactor = 2.0
 
 # List of snapshot redshifts
-zfile = /home/chandro/dhalo-trees/Parameters/UNITsim+SUBFIND-HBT/redshift_list.txt
+zfile = /home/chandro/dhalo-trees/Parameters/UNITsim+CT/redshift_list.txt
 
 # Whether subhalos which demerge should be remerged
 remerge = .true.
@@ -117,16 +119,6 @@ interpolate = .true.
 
 # Always need this
 separate_branches = .true.
-
-# Parameter specific to subhalo_format = consistenttrees
-rhalf_consistenttrees_aprox = .true.
-# .true. in case the approximation Rvir/2 is being used as Rhalf
-# .false. in case the real Rhalf is included in the catalogues
-
-# Parameter specific to subhalo_format = consistenttrees
-snap0 = .false.
-# .true. in case it is considered the snap=0
-# .false. in case it is not considered the snap=0 and the catalogues start at snap=1
 
 # Parameters specific to trace_particles
 # --------------------------------------
@@ -141,4 +133,4 @@ read_all_files = .false.
 types_to_read = [ F, T, F, F, F, F ]
 
 # Whether to use orphan particles to set pos/vel of interpolated subhalos
-update_tree_files = T
+update_tree_files = F
