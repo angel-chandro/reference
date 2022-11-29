@@ -1,0 +1,147 @@
+#
+# Parameter file for the merger tree codes
+#
+# SIMULATION PARAMETERS
+# ---------------------
+
+# Simulation directory
+basedir                = /home/chandro/gadget4/examples/DM-L50-N128/output_hdf5_split_moresnaps_hbt_orphans/
+subhalo_catalogue_path = groups_XXX/fof_subhalo_tab_XXX
+subhalo_ids_path       = snapdir_XXX/snapshot_XXX
+#subhalo_catalogue_path = groups_XXX/subhalo_prog_XXX
+#subhalo_ids_path       = groups_XXX/subhalo_prog_XXX
+id_size          = 8
+float_size       = 4
+subhalo_format   = GADGET4_HDF5
+particle_type    = 1  # not used
+
+# Range of snapshots to use
+# Ignored if snapnum_file is not "none"
+ifirst = 0
+ilast  = 8
+
+# File with snapshot renumbering info
+# Set to "none" to disable.
+snapnum_file = none
+
+# Particle mass [Msun/h]
+mpart = 4.076e+10
+
+# Box size [Mpc/h]
+lbox =   50
+
+# Cosmological parameters
+omega0  =   0.308000
+lambda0 =   0.692000
+h0      =   0.678000
+omegab  =   0.048200
+
+# Maximum number of processors to do simultaneous I/O
+nproc_io = 128
+
+# Location of snapshots
+# Only needed to find particles for type 2 Galform galaxies
+snapshot_names  = /home/chandro/gadget4/examples/DM-L50-N128/output_hdf5_split_moresnaps_hbt_orphans/snapdir_XXX/snapshot-prevmostboundonly_XXX
+snapshot_format = HDF5  # not used
+
+# Where to find halo descendants information
+descendants_format = find_descendants
+descendants_path   = ./trees/
+
+#
+# MERGER TREE FILE PARAMETERS
+# ---------------------------
+
+# Merger tree output directory
+treedir = ./trees/
+
+# Base name for tree files
+tree_basename = tree
+
+# Number of merger tree files to produce
+ntreefile = 16
+
+#
+# MERGER TREE ALGORITHM PARAMETERS
+# --------------------------------
+#
+
+# Parameters specific to Find_Descendants
+# ---------------------------------------
+
+# Minimum number of particles to trace for each subhalo
+nlink_min       = 10
+nlink_max       = 100
+
+# Minimum fraction of particles to trace for each subhalo
+flink          = 0.1
+
+# Max. no. of extra snapshots we look ahead for descendants
+nsteptrace     = 5
+
+# Max. memory to use in Mb per process (this is only approximately obeyed!)
+max_memory = 4000
+
+# Location for temp files
+scratch_dir = ./tmp/
+
+# added parameter
+# number of files the ids are distributed in
+n_files_ids = 8
+
+# Parameters specific to Build_Trees
+# ----------------------------------
+
+# Whether to use total subhalo mass output by subfind.
+# Needs to be set to true in runs with variable particle
+# masses or multiple particle types since we can't just
+# assume mass = mpart*np in these cases.
+#
+# Must be set to false for L-Gadget runs where
+# subfind does not output the total subhalo mass.
+use_total_mass = .true.
+
+# A subhalo will be considered a separate halo if it retains this
+# fraction of the mass it had last time it was a separate FoF halo
+mfrac = 0.75
+
+# Subhalos outside rfactor times the half mass radius are also considered
+# to be separate halos
+rfactor = 2.0
+
+# List of snapshot redshifts
+zfile = /home/chandro/dhalo-trees/Parameters/UNITsim+SUBFIND-HBT/redshift_list.txt
+
+# Whether subhalos which demerge should be remerged
+remerge = .true.
+
+# Whether to add interpolated subhalos if descendant is >1 snapshot later
+interpolate = .true.
+
+# Always need this
+separate_branches = .true.
+
+# Parameter specific to subhalo_format = consistenttrees
+rhalf_consistenttrees_aprox = .true.
+# .true. in case the approximation Rvir/2 is being used as Rhalf
+# .false. in case the real Rhalf is included in the catalogues
+
+# Parameter specific to subhalo_format = consistenttrees
+snap0 = .false.
+# .true. in case it is considered the snap=0
+# .false. in case it is not considered the snap=0 and the catalogues start at snap=1
+
+# Parameters specific to trace_particles
+# --------------------------------------
+
+# Where to put the output
+trace_dir = ./trees/particle_lists
+
+# Whether to read all snapshot files at once or do them one at a time
+read_all_files = .false.
+
+# Which particle types to read
+types_to_read = [ F, T, F, F, F, F ]
+
+# Whether to use orphan particles to set pos/vel of interpolated subhalos
+update_tree_files = T
