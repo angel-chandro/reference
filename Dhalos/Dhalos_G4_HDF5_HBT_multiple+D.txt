@@ -6,7 +6,7 @@
 
 # Simulation directory
 basedir                = /home/chandro/gadget4/examples/DM-L50-N128/output_hdf5_split_moresnaps_hbt_orphans/
-# path to where the halo and particle catalogues are located
+# path to where the halo and particle catalogues are located INPUT PATH (TO BE CHANGED)
 subhalo_catalogue_path = groups_XXX/fof_subhalo_tab_XXX # halo catalogues
 subhalo_ids_path       = snapdir_XXX/snapshot_XXX # particle catalogues
 id_size          = 8
@@ -46,14 +46,14 @@ snapshot_format = HDF5
 
 # Where to find halo descendants information
 descendants_format = find_descendants # own Dhalos merger trees
-descendants_path   = ./trees/
+descendants_path   = ./trees/ # OUTPUT PATH FOR FIND_DESCENDANTS (TO BE CHANGED)
 
 #
 # MERGER TREE FILE PARAMETERS
 # ---------------------------
 
 # Merger tree output directory
-treedir = ./trees/
+treedir = ./trees/ # OUTPUT PATH FOR BUILD_TREES (TO BE CHANGED)
 
 # Base name for tree files
 tree_basename = tree
@@ -137,7 +137,7 @@ snap0 = .false.
 # --------------------------------------
 
 # Where to put the output
-trace_dir = ./trees/particle_lists
+trace_dir = ./trees/particle_lists # OUTPUT PATH FOR TRACE_PARTICLES (TO BE CHANGED)
 
 # Whether to read all snapshot files at once or do them one at a time
 read_all_files = .false.
