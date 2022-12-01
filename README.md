@@ -7,7 +7,7 @@ There are different parts of the code to be run:
 To run the Find_Descendants executable:  mpirun -np 8(number of Gadget4 output files) ./path/to/build/find_descendants parameter_file
 - Build_Trees: given some input merger trees, the code modifies them.
 To run the Build_Trees executable:  mpirun -np 8(number of Gadget4 output files) ./path/to/build/build_trees parameter_file
-- Trace particles: for type 2 galaxies (orphans), it generates some particle catalogues with only the most bound particles of these orphan galaxies so that the SAM takes as position and velocity the one from the most bound particle and not interpolating.
+- Trace_Particles: for type 2 galaxies (orphans), it generates some particle catalogues with only the most bound particles of these orphan galaxies so that the SAM takes as position and velocity the one from the most bound particle and making use of an analytical expression.
 To run the Trace_Particles executable:  mpirun -np 8(number of Gadget4 output files) ./path/to/build/trace_particles parameter_file
 
 All these executables can be run through the Slurm queueing system. One example is given here:

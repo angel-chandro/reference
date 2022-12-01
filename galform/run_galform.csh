@@ -1525,11 +1525,11 @@ else if ( $elgs == 'true' ) then
 else if ( $elliott == 'true' ) then
 	if ( $iz == 128 ) then # z=0 all Elliott calibration plots
 	    echo 'Setting bands adequate'
-	    # band         K    B   I  bJ  r    K    B   I  bJ  r    V   Z_V
-	    set idband =  (49  51  54  6  204  49  51  54    6  204  52   52)
+	    # band         K    B   I  bJ  r    V   Z_V
+	    set idband =  (49  51  54  6  204   52   52)
 	    # select whether rest-frame (0), observer-frame (1), lum-weighted age (2),
 	    # lum-weighted metallicity (3), lum-weighted Vc (4)
-	    set iselect = (0   0   0     0   0   1   1   1    1   1   0   3)
+	    set iselect = (0   0   0   0   0     0   3)
 	else if ( $iz == 95 ) then # z=1.1 only K LF
 	    echo 'Setting bands adequate'
 	    # band         K   K
@@ -1537,6 +1537,7 @@ else if ( $elliott == 'true' ) then
 	    # select whether rest-frame (0), observer-frame (1), lum-weighted age (2),
 	    # lum-weighted metallicity (3), lum-weighted Vc (4)
 	    set iselect = (0  1)
+	endif
 
 else if ( $K_Bj == 'true' ) then
 	echo 'Setting bands adequate'
@@ -2093,14 +2094,18 @@ if ( $elliott == 'true' ) then
     echo '******************************************************************'
     echo running INSERT_GAL_PROPS, post-processing
 
-    # B/T properties (following dustpars_Baugh05.csh)
-    ./build/insert_gal_props.exe $output_dir/galaxies.hdf5 iseed=$ISEED2 z=$z dust dust_MW_hz1.0.dat $emdustfile \
-	$rfacburst $fcloud $tesc_disk $tesc_burst BoverTSD_r BoverTB_r BoverTI_r \
-	BoverTSD_r_ext BoverTB_r_ext BoverTI_r_ext \
-	magIr_tot_ext0 magBr_tot_ext magBr_tot_ext0 magUKr_tot_ext0 magIr_tot \
-	magUKr_tot_ext magBjr_tot_ext magSDr_tot_ext \
-	magUKr_tot magBjr_tot magSDr_tot BoverT metV_tot
-	
+    if ( $iz == 128 ) then # z=0 all Elliott calibration plots
+	echo $z
+	# additional properties: B/T or magnitudes (following dustpars_Baugh05.csh)
+	./build/insert_gal_props.exe $output_dir/galaxies.hdf5 iseed=$ISEED2 z=$z dust dust_MW_hz1.0.dat $emdustfile \
+	    $rfacburst $fcloud $tesc_disk $tesc_burst BoverTSD_r_ext BoverTB_r_ext magIr_tot_ext0 magUKr_tot_ext magSDr_tot_ext metV_tot
+	    
+    else if ( $iz == 95 ) then # z=1.1 only K LF
+	echo $z
+	# additional properties: B/T or magnitudes (following dustpars_Baugh05.csh)
+	./build/insert_gal_props.exe $output_dir/galaxies.hdf5 iseed=$ISEED2 z=$z dust dust_MW_hz1.0.dat $emdustfile \
+	    $rfacburst $fcloud $tesc_disk $tesc_burst magUKr_tot_ext
+    endif
 	
 ## galaxy sizes & colours in SDSS (early and late type galaxy sizes)
 #    echo creating file size_SDSS.cat
