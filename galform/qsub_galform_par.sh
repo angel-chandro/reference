@@ -4,22 +4,26 @@ name='test'
 logpath=/home/chandro/junk
 max_jobs=64
 
-Nbody_sim=UNIT100 # indicate the simulation
+Nbody_sim=n512_fid_G4
 
 
-if [ $Nbody_sim == UNIT100 ]
+if [ $Nbody_sim == n512_fid_G4 ]
 then
-    #iz_list=(128) # only z = 0
+    #iz_list=(128 95) # only z = 0
     iz_list=(128 95)
     
-else [ $Nbody_sim == UNIT200 ]
-    #iz_list=(128) # only z = 0
-    iz_list=(128 95)
-     
-fi
+else if [ $Nbody_sim == UNIT100 ]
+     then
+	 #iz_list=(128) # only z = 0
+	 iz_list=(128 95)
 
-# In this case we send only 1 model, but you cand send more than 1
-for model in {"gp19.vimal",}
+     else [ $Nbody_sim == UNIT ]
+	  #iz_list=(128) # only z = 0
+	  iz_list=(95)
+     fi
+fi
+  
+for model in {"gp19.vimal.nopart",}
 do
     echo 'Model: ' $model
 
@@ -28,11 +32,11 @@ do
 	echo ${iz}
 	script=run_galform_vio_simplified.csh
 	jobname=$Nbody_sim.$model
-	logname=${logpath}/${Nbody_sim}/neta_simplified/${model}.%A.%a.log
-	#\mkdir -p ${logname:h}
-	job_file=${logpath}/${Nbody_sim}/neta_simplified/${model}.job
-
-	# uses 64 cpus, each of them 1 subvolume
+	logdirectory=${logpath}/fnl_sam/test/${Nbody_sim}
+	\mkdir -p ${logdirectory:h}
+	logname=${logdirectory}/${model}.%A.%a.log
+	job_file=${logdirectory}/${model}.job
+    
 	tasks=64
 	i=1
 	int1=$( expr $i - 1)
@@ -49,7 +53,7 @@ do
 #SBATCH -o ${logname}
 #SBATCH --nodelist=miclap
 #SBATCH -A 64cores
-#SBATCH -t 2:00:00   
+#SBATCH -t 4-00:00:00   
 #
 #
 for ivol in {$j_i..$j_f}

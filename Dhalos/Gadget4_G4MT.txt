@@ -85,6 +85,13 @@ max_memory = 4000
 # Location for temp files
 scratch_dir = ./tmp/
 
+# Parameter specific to subhalo_format="LGADGET2","LGADGET3","PGADGET3",
+# "COCO","GADGET4_HDF5","EAGLE"
+# number of files the halo-subhalos (n_files_tab)
+# and particles (n_files_ids) are distributed in
+n_files_ids = 8
+n_files_tab = 8
+
 # Parameters specific to Build_Trees
 # ----------------------------------
 

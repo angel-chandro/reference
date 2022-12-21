@@ -6,7 +6,7 @@ set logpath = /home/chandro/junk
 set max_jobs = 64
 
 # label for N-body simulation (halo merger trees & cosmological parameters)
-set Nbody_sim = UNIT200 # indicate simulation
+set Nbody_sim = n512_fid_Dhalo
 #set Nbody_sim = MillGas
 #set Nbody_sim = MillGas62.5
 #set Nbody_sim = EagleDM
@@ -185,11 +185,11 @@ else if( $Nbody_sim == UNIT ) then
     # subvolumes
     set nvol = 1-64
 
-else if( $Nbody_sim == Gadget4_DHBT ) then
+else if( $Nbody_sim == n512_fid_Dhalo ) then
 
-    set iz_list = (8) # only z = 0
+    set iz_list = (128) # only z = 0
     # subvolumes
-    set nvol = 1-16
+    set nvol = 1-64
 
 endif
 
@@ -203,16 +203,17 @@ set Testing = false
 echo 'Redshifts: ' $iz_list
 echo 'Volumes: ' $nvol
 
-# In this case we send only 1 model, but you can send more than 1
-foreach model (gp19.vimal) #gp19.font gp19.starvation)
+# Send only 1 model
+foreach model (gp19.vimal.nopart) #gp19.font gp19.starvation)
     echo 'Model: ' $model
     # Loop for different redshift
     foreach iz ( $iz_list)
 	# run script
-	set script = run_galform.csh
+	set script = run_galform_vio_simplified.csh
 	set jobname = $Nbody_sim.$model
-	set logname = ${logpath}/elliott/${Nbody_sim}/${model}.%A.%a.log
-	\mkdir -p ${logname:h}
+	set logdirectory = ${logpath}/fnl_sam/test/${Nbody_sim}/
+	\mkdir -p ${logdirectory:h}
+	set logname = ${logdirectory}/${model}.%A.%a.log
 
 
 	if ("$Testing" == "true") then
@@ -222,7 +223,7 @@ foreach model (gp19.vimal) #gp19.font gp19.starvation)
         cat << EOF - ${script} | sbatch --array=${nvol}%${max_jobs} 
 #!/bin/tcsh -ef 
 # 
-#SBATCH --ntasks 1   
+#SBATCH --ntasks 16   
 #SBATCH -J ${jobname} 
 #SBATCH -o ${logname}
 #SBATCH --nodelist=taurus
@@ -246,7 +247,7 @@ EOF
         cat << EOF - ${script} | sbatch --array=${nvol}%${max_jobs} 
 #!/bin/tcsh -ef 
 # 
-#SBATCH --ntasks 16
+#SBATCH --ntasks 1
 #SBATCH -J ${jobname} 
 #SBATCH -o ${logname}
 #SBATCH --nodelist=miclap 

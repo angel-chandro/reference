@@ -96,7 +96,7 @@ set elliott     = true # it generates the output for the Elliott et al. 2021 cal
  
 set keep_inputs = false #if true doesn't delete galform_input_file (necessary for  re-running galform with same input file to output sfhs) 
 # main directory which will contain subdirectories for each model
-set models_dir = /home/chandro/Galform_Out/simulations/elliott/$Nbody_sim
+set models_dir = /home/chandro/Galform_Out/simulations/fnl_sam/test/$Nbody_sim
 mkdir -p $models_dir
 
 # additional parameters for sample_gals & lum_fun
@@ -519,104 +519,167 @@ else if( $Nbody_sim == UNIT ) then
     #set iz2 = 30
     #set iz3 = 25
 
-else if( $Nbody_sim == Gadget4_DHBT ) then
-# Gadget4 DM-only simulation
-# snapshots in range iz = 0-8
-# subvolumes in range ivol = 0-15
-
-# files with N-body data
-    set Nbody_trees_dir = /home/chandro/dhalo-trees_rhalf+snap_testSUBFIND/Parameters/UNITsim+SUBFIND_GHDF5+D_multiple_HBT/trees/
-    set snapshot_file = /home/chandro/gadget4/examples/DM-L50-N128/redshift_list_moresnaps.txt
-    set aquarius_tree_file = $Nbody_trees_dir/tree_008
-    set aquarius_particle_file = $Nbody_trees_dir/particle_lists/particle_list_008
-    # each subvolume has equal volume - no volumes.txt file
-    set volume_file = 0 # no file here!
-    set volume = 7812.5
-# cosmological parameters
-    set omega0 = 0.308
-    set lambda0 = 0.692
-    set omegab = 0.0482
-    set h0 = 0.678
-# power spectrum
-    set sigma8 = 0.9
-    set PKfile = ../../CAMB/pk_Gadget4_norm.dat
-# snapshot number for z=0
-    set iz0 = 8
-
-
-else if( $Nbody_sim == Gadget4_DHBT_nonupdate ) then
-# Gadget4 DM-only simulation
-# snapshots in range iz = 0-8
-# subvolumes in range ivol = 0-15
-
-# files with N-body data
-    set Nbody_trees_dir = /home/chandro/dhalo-trees_rhalf+snap_testSUBFIND/Parameters/UNITsim+SUBFIND_GHDF5+D_multiple_HBT/trees_nonupdate/
-    set snapshot_file = /home/chandro/gadget4/examples/DM-L50-N128/redshift_list_moresnaps.txt
-    set aquarius_tree_file = $Nbody_trees_dir/tree_008
-    set aquarius_particle_file = $Nbody_trees_dir/particle_lists/particle_list_008
-    # each subvolume has equal volume - no volumes.txt file
-    set volume_file = 0 # no file here!
-    set volume = 7812.5
-# cosmological parameters
-    set omega0 = 0.308
-    set lambda0 = 0.692
-    set omegab = 0.0482
-    set h0 = 0.678
-# power spectrum
-    set sigma8 = 0.9
-    set PKfile = ../../CAMB/pk_Gadget4_norm.dat
-# snapshot number for z=0
-    set iz0 = 8
-
     
-else if( $Nbody_sim == Gadget4_SHBT ) then
-# Gadget4 DM-only simulation
-# snapshots in range iz = 0-8
-# subvolumes in range ivol = 0-15
-
-# files with N-body data
-    set Nbody_trees_dir = /home/chandro/dhalo-trees_rhalf+snap_testSUBFIND/Parameters/UNITsim+SUBFIND_GHDF5+S_multiple_HBT/trees/
-    set snapshot_file = /home/chandro/gadget4/examples/DM-L50-N128/redshift_list_moresnaps.txt
-    set aquarius_tree_file = $Nbody_trees_dir/tree_008
-    set aquarius_particle_file = $Nbody_trees_dir/particle_lists/particle_list_008
-    # each subvolume has equal volume - no volumes.txt file
-    set volume_file = 0 # no file here!
-    set volume = 7812.5
-# cosmological parameters
-    set omega0 = 0.308
-    set lambda0 = 0.692
-    set omegab = 0.0482
-    set h0 = 0.678
-# power spectrum
-    set sigma8 = 0.9
-    set PKfile = ../../CAMB/pk_Gadget4_norm.dat
-# snapshot number for z=0
-    set iz0 = 8
-
-    
-else if( $Nbody_sim == Gadget4_SHBT_nonupdate ) then
+else if( $Nbody_sim == n512_fid_G4 ) then
 # UNIT DM-only simulation
-# snapshots in range iz = 1-128
+# snapshots in range iz = 0-128
 # subvolumes in range ivol = 0-63
 
 # files with N-body data
-    set Nbody_trees_dir = /home/chandro/dhalo-trees_rhalf+snap_testSUBFIND/Parameters/UNITsim+SUBFIND_GHDF5+S_multiple_HBT/trees_nonupdate/
-    set snapshot_file = /home/chandro/gadget4/examples/DM-L50-N128/redshift_list_moresnaps.txt
-    set aquarius_tree_file = $Nbody_trees_dir/tree_008
-    set aquarius_particle_file = $Nbody_trees_dir/particle_lists/particle_list_008
+    if( $model == gp19.vimal.nopart ) then
+	set Nbody_trees_dir = /home/chandro/fnl_sam/n512_fid/G4/trees_nonupdate/ # path to Dhalos trees
+    else if( $model == gp19.vimal.part ) then
+	set Nbody_trees_dir = /home/chandro/fnl_sam/n512_fid/G4/trees/ # path to Dhalos trees
+    endif	
+    set snapshot_file = /home/chandro/fnl_sam/redshift_list_n512_fid.txt # snapshot-redshift list again
+    set aquarius_tree_file = $Nbody_trees_dir/tree_128 # Dhalos trees
+    set aquarius_particle_file = $Nbody_trees_dir/particle_lists/particle_list_128
     # each subvolume has equal volume - no volumes.txt file
     set volume_file = 0 # no file here!
-    set volume = 7812.5
+    set volume = 244140.625 # subvolume = (250)**3/64
 # cosmological parameters
-    set omega0 = 0.308
-    set lambda0 = 0.692
-    set omegab = 0.0482
-    set h0 = 0.678
+    set omega0 = 0.3089
+    set lambda0 = 0.6911
+    set omegab = 0.0483
+    set h0 = 0.6774
 # power spectrum
-    set sigma8 = 0.9
-    set PKfile = ../../CAMB/pk_Gadget4_norm.dat
+    set sigma8 = 0.8159
+    set PKfile = ../../CAMB/pk_fnl_sam_fid_norm.dat
 # snapshot number for z=0
-    set iz0 = 8
+    # output redshift
+    set iz0 = 128 # z=0
+    set iz1 = 95 # z=1.1
+    #set iz2 = 30
+    #set iz3 = 25
+
+else if( $Nbody_sim == n512_fid_Dhalo ) then
+# UNIT DM-only simulation
+# snapshots in range iz = 0-128
+# subvolumes in range ivol = 0-63
+
+# files with N-body data
+    if( $model == gp19.vimal.nopart ) then
+	set Nbody_trees_dir = /home/chandro/fnl_sam/n512_fid/Dhalo/trees_nonupdate/ # path to Dhalos trees
+    else if( $model == gp19.vimal.part ) then
+	set Nbody_trees_dir = /home/chandro/fnl_sam/n512_fid/Dhalo/trees/ # path to Dhalos trees
+    endif
+    set snapshot_file = /home/chandro/fnl_sam/redshift_list_n512_fid.txt # snapshot-redshift list again
+    set aquarius_tree_file = $Nbody_trees_dir/tree_128 # Dhalos trees
+    set aquarius_particle_file = $Nbody_trees_dir/particle_lists/particle_list_128
+    # each subvolume has equal volume - no volumes.txt file
+    set volume_file = 0 # no file here!
+    set volume = 244140.625 # subvolume = (250)**3/64
+# cosmological parameters
+    set omega0 = 0.3089
+    set lambda0 = 0.6911
+    set omegab = 0.0483
+    set h0 = 0.6774
+# power spectrum
+    set sigma8 = 0.8159
+    set PKfile = ../../CAMB/pk_fnl_sam_fid_norm.dat
+# snapshot number for z=0
+    # output redshift
+    set iz0 = 128 # z=0
+    set iz1 = 95 # z=1.1
+    #set iz2 = 30
+    #set iz3 = 25
+
+else if( $Nbody_sim == n512_fnl100 ) then
+# UNIT DM-only simulation
+# snapshots in range iz = 0-128
+# subvolumes in range ivol = 0-63
+
+# files with N-body data
+    if( $model == gp19.vimal.nopart ) then
+	set Nbody_trees_dir = /home/chandro/fnl_sam/n512_fnl100/G4/trees_nonupdate/ # path to Dhalos trees
+    else if( $model == gp19.vimal.part ) then
+	set Nbody_trees_dir = /home/chandro/fnl_sam/n512_fnl100/G4/trees/ # path to Dhalos trees
+    endif
+    set snapshot_file = /home/chandro/fnl_sam/redshift_list_n512_fnl100.txt # snapshot-redshift list again
+    set aquarius_tree_file = $Nbody_trees_dir/tree_128 # Dhalos trees
+    set aquarius_particle_file = $Nbody_trees_dir/particle_lists/particle_list_128
+    # each subvolume has equal volume - no volumes.txt file
+    set volume_file = 0 # no file here!
+    set volume = 244140.625 # subvolume = (250)**3/64
+# cosmological parameters
+    set omega0 = 0.3089
+    set lambda0 = 0.6911
+    set omegab = 0.0483
+    set h0 = 0.6774
+# power spectrum
+    set sigma8 = 0.8159
+    set PKfile = ../../CAMB/pk_fnl_sam_fid_norm.dat
+# snapshot number for z=0
+    # output redshift
+    set iz0 = 128 # z=0
+    set iz1 = 95 # z=1.1
+    #set iz2 = 30
+    #set iz3 = 25
+
+else if( $Nbody_sim == n512_high ) then
+# UNIT DM-only simulation
+# snapshots in range iz = 0-128
+# subvolumes in range ivol = 0-63
+
+# files with N-body data
+    if( $model == gp19.vimal.nopart ) then
+	set Nbody_trees_dir = /home/chandro/fnl_sam/n512_high/G4/trees_nonupdate/ # path to Dhalos trees
+    else if( $model == gp19.vimal.part ) then
+	set Nbody_trees_dir = /home/chandro/fnl_sam/n512_high/G4/trees/ # path to Dhalos trees
+    endif
+    set snapshot_file = /home/chandro/fnl_sam/redshift_list_n512_high.txt # snapshot-redshift list again
+    set aquarius_tree_file = $Nbody_trees_dir/tree_128 # Dhalos trees
+    set aquarius_particle_file = $Nbody_trees_dir/particle_lists/particle_list_128
+    # each subvolume has equal volume - no volumes.txt file
+    set volume_file = 0 # no file here!
+    set volume = 244140.625 # subvolume = (250)**3/64
+# cosmological parameters
+    set omega0 = 0.3089
+    set lambda0 = 0.6911
+    set omegab = 0.0483
+    set h0 = 0.6774
+# power spectrum
+    set sigma8 = 0.83615
+    set PKfile = ../../CAMB/pk_fnl_sam_high_norm.dat
+# snapshot number for z=0
+    # output redshift
+    set iz0 = 128 # z=0
+    set iz1 = 95 # z=1.1
+    #set iz2 = 30
+    #set iz3 = 25
+
+else if( $Nbody_sim == n512_low ) then
+# UNIT DM-only simulation
+# snapshots in range iz = 0-128
+# subvolumes in range ivol = 0-63
+
+# files with N-body data
+    if( $model == gp19.vimal.nopart ) then
+	set Nbody_trees_dir = /home/chandro/fnl_sam/n512_low/G4/trees_nonupdate/ # path to Dhalos trees
+    else if( $model == gp19.vimal.part ) then
+	set Nbody_trees_dir = /home/chandro/fnl_sam/n512_low/G4/trees/ # path to Dhalos trees
+    endif
+    set snapshot_file = /home/chandro/fnl_sam/redshift_list_n512_low.txt # snapshot-redshift list again
+    set aquarius_tree_file = $Nbody_trees_dir/tree_128 # Dhalos trees
+    set aquarius_particle_file = $Nbody_trees_dir/particle_lists/particle_list_128
+    # each subvolume has equal volume - no volumes.txt file
+    set volume_file = 0 # no file here!
+    set volume = 244140.625 # subvolume = (250)**3/64
+# cosmological parameters
+    set omega0 = 0.3089
+    set lambda0 = 0.6911
+    set omegab = 0.0483
+    set h0 = 0.6774
+# power spectrum
+    set sigma8 = 0.79534
+    set PKfile = ../../CAMB/pk_fnl_sam_low_norm.dat
+# snapshot number for z=0
+    # output redshift
+    set iz0 = 128 # z=0
+    set iz1 = 95 # z=1.1
+    #set iz2 = 30
+    #set iz3 = 25
+
 
 else if( $Nbody_sim == MillGas62.5 ) then
 # MillGas 62.5 Mpc/h run 
@@ -736,6 +799,31 @@ else if( $model == gp19.vimal ) then
     ./replace_variable.csh $galform_inputs_file aquarius_nbody_merging_interior_mass .true.
     ./replace_variable.csh $galform_inputs_file emlines  .false.
 
+else if( $model == gp19.vimal.nopart ) then
+    # GALFORM input parameters file for base model/run
+    set base_inputs_file = /home/chandro/Galform_Out/run_codes/UNIT.ref # ref file
+    # make copy of base input parameters file
+    cp $base_inputs_file $galform_inputs_file
+    # set default values of dust parameters for post-processing
+    source /home/chandro/galform/dustpars_Baugh05.csh
+
+    ./replace_variable.csh $galform_inputs_file aquarius_nbody_merging  .true.
+    ./replace_variable.csh $galform_inputs_file aquarius_nbody_merging_scheme  1
+    ./replace_variable.csh $galform_inputs_file aquarius_nbody_merging_interior_mass .true.
+    ./replace_variable.csh $galform_inputs_file emlines  .false.
+
+else if( $model == gp19.vimal.part ) then
+    # GALFORM input parameters file for base model/run
+    set base_inputs_file = /home/chandro/Galform_Out/run_codes/UNIT.ref # ref file
+    # make copy of base input parameters file
+    cp $base_inputs_file $galform_inputs_file
+    # set default values of dust parameters for post-processing
+    source /home/chandro/galform/dustpars_Baugh05.csh
+
+    ./replace_variable.csh $galform_inputs_file aquarius_nbody_merging  .true.
+    ./replace_variable.csh $galform_inputs_file aquarius_nbody_merging_scheme  1
+    ./replace_variable.csh $galform_inputs_file aquarius_nbody_merging_interior_mass .true.
+    ./replace_variable.csh $galform_inputs_file emlines  .false.
 
 else if( $model == gp19.vimal.em) then
     # GALFORM input parameters file for base model/run
@@ -1576,7 +1664,7 @@ set nband = `echo $idband | wc -w`
 ./replace_variable.csh $galform_inputs_file aquarius_tree_file $aquarius_tree_file
 
 
-if($Nbody_sim != UNIT100 && $Nbody_sim != UNIT200 && $Nbody_sim != UNIT) then
+if($Nbody_sim != UNIT100 && $Nbody_sim != UNIT200 && $Nbody_sim != UNIT && $model != gp19.vimal.nopart) then
     ./replace_variable.csh $galform_inputs_file aquarius_particle_file $aquarius_particle_file
 else
     ./delete_variable.csh $galform_inputs_file aquarius_particle_file # if you don't have particle files
@@ -2094,15 +2182,15 @@ if ( $elliott == 'true' ) then
     echo '******************************************************************'
     echo running INSERT_GAL_PROPS, post-processing
 
-    if ( $iz == 128 ) then # z=0 all Elliott calibration plots
+    if ( $iz == 128 ) then
 	echo $z
-	# additional properties: B/T or magnitudes (following dustpars_Baugh05.csh)
+	# B/T properties (following dustpars_Baugh05.csh)
 	./build/insert_gal_props.exe $output_dir/galaxies.hdf5 iseed=$ISEED2 z=$z dust dust_MW_hz1.0.dat $emdustfile \
 	    $rfacburst $fcloud $tesc_disk $tesc_burst BoverTSD_r_ext BoverTB_r_ext magIr_tot_ext0 magUKr_tot_ext magSDr_tot_ext metV_tot
 	    
-    else if ( $iz == 95 ) then # z=1.1 only K LF
+    else if ( $iz == 95 ) then
 	echo $z
-	# additional properties: B/T or magnitudes (following dustpars_Baugh05.csh)
+    	# B/T properties (following dustpars_Baugh05.csh)
 	./build/insert_gal_props.exe $output_dir/galaxies.hdf5 iseed=$ISEED2 z=$z dust dust_MW_hz1.0.dat $emdustfile \
 	    $rfacburst $fcloud $tesc_disk $tesc_burst magUKr_tot_ext
     endif

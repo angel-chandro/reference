@@ -11,7 +11,7 @@ plt.style.use(mpl_style.style1)
 # of UNIT or Gadget4 simulations to run SAMs (galform and shark) over this cosmology
 # manually we introduce the sigma8 value we want for the power spectrum
 
-cosmo = 'Gadget4'
+cosmo = 'fnl_sam_high'
 
 if cosmo == 'UNIT':
     string = 'UNIT'
@@ -29,18 +29,50 @@ if cosmo == 'UNIT':
     # Set Cosmology for CAMB (default As=2e-09, used for the normalisation)
     params = cb.set_params(ns=ns, H0=h0*100, ombh2=Obh2, omch2=(Omh2-Obh2), TCMB=TCMB, WantTransfer=True)
 
-elif cosmo == 'Gadget4':
-    string = 'Gadget4'
-    omega0 = 0.308
-    lambda0 = 0.692
-    h0 = 0.678
+elif cosmo == 'fnl_sam_fid':
+    string = 'fnl_sam_fid'
+    omega0 = 0.3089
+    lambda0 = 0.6911
+    h0 = 0.6774
     TCMB = 2.7255 # planck 2015
     ns = 1
-    sigma8 = 0.9
+    sigma8 = 0.8159
     logkmin = -5
     logkmax = 3
     nk = 1001
-    Obh2 = 0.0482*h0**2 # planck 2015
+    Obh2 = 0.0483*h0**2 # planck 2015
+    Omh2 = omega0*h0**2
+    # Set Cosmology for CAMB (default As=2e-09, used for the normalisation)
+    params = cb.set_params(ns=ns, H0=h0*100, ombh2=Obh2, omch2=(Omh2-Obh2), TCMB=TCMB, WantTransfer=True)
+
+elif cosmo == 'fnl_sam_high':
+    string = 'fnl_sam_high'
+    omega0 = 0.3089
+    lambda0 = 0.6911
+    h0 = 0.6774
+    TCMB = 2.7255 # planck 2015
+    ns = 1
+    sigma8 = 0.83615
+    logkmin = -5
+    logkmax = 3
+    nk = 1001
+    Obh2 = 0.0483*h0**2 # planck 2015
+    Omh2 = omega0*h0**2
+    # Set Cosmology for CAMB (default As=2e-09, used for the normalisation)
+    params = cb.set_params(ns=ns, H0=h0*100, ombh2=Obh2, omch2=(Omh2-Obh2), TCMB=TCMB, WantTransfer=True)
+
+elif cosmo == 'fnl_sam_low':
+    string = 'fnl_sam_low'
+    omega0 = 0.3089
+    lambda0 = 0.6911
+    h0 = 0.6774
+    TCMB = 2.7255 # planck 2015
+    ns = 1
+    sigma8 = 0.79534
+    logkmin = -5
+    logkmax = 3
+    nk = 1001
+    Obh2 = 0.0483*h0**2 # planck 2015
     Omh2 = omega0*h0**2
     # Set Cosmology for CAMB (default As=2e-09, used for the normalisation)
     params = cb.set_params(ns=ns, H0=h0*100, ombh2=Obh2, omch2=(Omh2-Obh2), TCMB=TCMB, WantTransfer=True)
