@@ -1,6 +1,6 @@
 DHALOS
 
-I have to upload the code to github. It is essential to run Galform and Shark SAMs over merger trees since it gives the appropriate format. It can be run in parallel. The standard code is in: /home/chandro/dhalo-trees_rhalf+snap_nfids_nftab.
+I have to upload the code to github. It is essential to run the merger trees over this code before processing Galform and Shark SAMs since it gives the appropriate format. It can be run in parallel. The standard code is in: /home/chandro/dhalo-trees_rhalf+snap_nfids_nftab.
 
 
 There are different parts of the code to be run:
