@@ -7,7 +7,7 @@ Repository for reference regarding running SAMs over cosmological simulations. I
 
 The code needs to be run before processing Galform and SHARK SAMs since it gives the appropriate format for the merger trees. It can be run in parallel.
 
-## Versions
+### Versions
 I have not uploaded the updated versions to Github since it should be made public by John. There are 2 versions right now:
 1. The version I developed during my time working at UAM. This code is already compiled on taurus: `/home/chandro/dhalo-trees_rhalf+snap_nfids_nftab`
 2. The version I am using during my PhD (supposedly a more updated one). This code should be compiled since I have tried and I was not able to do it: `/home/chandro/dhalo-trees_clagos_mod`
